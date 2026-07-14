@@ -7,8 +7,10 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float speed;
     [SerializeField] private float normalSpeed;
     [SerializeField] private float maxSpeed;
-
-    private Vector3 dirVec;
+    [SerializeField] private float acceleration = 5f; // 가속도
+    [SerializeField] private float deceleration = 10f; // 감속도   
+    
+    public Vector3 dirVec;
 
     private GameObject scanObject;
 
@@ -20,23 +22,25 @@ public class PlayerMove : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        
+        speed = normalSpeed;
     }
 
     void Update()
     {
-        x = Input.GetAxisRaw("Horizontal");
-        y = Input.GetAxisRaw("Vertical");
-        
-        if (Mathf.Abs(x) > 0 || Mathf.Abs(y) > 0)
+        if (dirVec != Vector3.zero)
         {
             if (speed < maxSpeed)
             {
-                speed += Time.deltaTime * 5;
+                speed += acceleration * Time.deltaTime;
             }
         }
-        else if (speed > normalSpeed)
+        else
         {
-            speed -= Time.deltaTime * 10;
+            if (speed > normalSpeed)
+            {
+                speed -= deceleration * Time.deltaTime;
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.F))
@@ -61,8 +65,10 @@ public class PlayerMove : MonoBehaviour
 
     void FixedUpdate()
     {
-        Vector2 dir = new Vector2(x, y);
-        rb.linearVelocity = dir * speed;
+        //Vector2 dir = new Vector2(x, y);
+        //rb.linearVelocity = dir * speed;
+        
+        rb.linearVelocity = dirVec * speed;
         
         //Ray
         Debug.DrawRay(rb.position, dirVec, Color.green);
