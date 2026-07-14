@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameStartUI : MonoBehaviour
 {
@@ -19,7 +20,7 @@ public class GameStartUI : MonoBehaviour
 
     private void GameStart()
     {
-        
+        SceneManager.LoadScene(1);
     }
     
     private void GameQuit()

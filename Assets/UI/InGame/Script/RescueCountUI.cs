@@ -1,16 +1,28 @@
+using System;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RescueCountUI : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private TextMeshProUGUI rescueCountText;
+    private int rescueCount = 0;
+
+    private void Start()
     {
-        
+        rescueCountText = GetComponentInChildren<TextMeshProUGUI>();
+        rescueCountText.text = rescueCount.ToString();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Init()
     {
-        
+        rescueCount = 0;
+        rescueCountText.text = rescueCount.ToString();
+    }
+
+    private void RescueStudent()
+    {
+        rescueCount++;
+        rescueCountText.text = rescueCount.ToString();
     }
 }

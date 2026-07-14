@@ -211,7 +211,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameStartUI
   startButton: {fileID: 1533232606}
-  quitButton: {fileID: 0}
+  quitButton: {fileID: 752912997}
 --- !u!1 &752912995
 GameObject:
   m_ObjectHideFlags: 0
