@@ -9,10 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: d88b573b136dcb048b1525aa801d5134, type: 3}
   m_Name: MapDatabase
   m_EditorClassIdentifier: Assembly-CSharp::MapDatabase
-  maps:
-  - {fileID: 11400000, guid: 7916d47d66cf50f4ca15e55a95d330f4, type: 2}
-  - {fileID: 11400000, guid: 0b4006213b6d8bf4b95fc5cc0d8436c8, type: 2}
-  - {fileID: 11400000, guid: 177c33612f514df4c946245220280daa, type: 2}
+  mapDatabase: {fileID: 0}
+  startMap: {fileID: 0}
+  startSpawnLocationName: 
+  mainCamera: {fileID: 0}
+  mapZOffset: 10
+  mapParent: {fileID: 0}
+  player: {fileID: 0}
