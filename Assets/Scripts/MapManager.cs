@@ -77,11 +77,13 @@ public class MapManager : MonoBehaviour
         }
     }
 
-    private void PositionMapParentAtCamera()
-    {
-        if (mainCamera == null || mapParent == null) return;
+private void PositionMapParentAtCamera()
+{
+    if (mainCamera == null || mapParent == null) return;
 
-        Vector3 camPos = mainCamera.transform.position;
-        mapParent.position = new Vector3(camPos.x, camPos.y,camPos.z  + mapZOffset);
-    }
+    Vector3 camPos = mainCamera.transform.position;
+    mapParent.position = new Vector3(camPos.x, camPos.y, camPos.z + mapZOffset);
+
+    Debug.Log($"[MapManager] 카메라 위치: {camPos}, 맵 배치 위치: {mapParent.position}");
+}
 }
