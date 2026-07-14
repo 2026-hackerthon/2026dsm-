@@ -13,14 +13,7 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float acceleration = 5f; // 가속도
     [SerializeField] private float deceleration = 10f; // 감속도   
     
-    public Vector3 dirVec;
-
-    private GameObject scanObject;
-
-    // public TextManage manage;
- 
-    private float x;
-    private float y;
+    private Vector2 dirVec;
 
     void Awake()
     {
@@ -31,9 +24,14 @@ public class PlayerMove : MonoBehaviour
         speed = normalSpeed;
     }
 
+    public void SetMoveInput(Vector2 input)
+    {
+        dirVec = input.normalized;
+    }
+
     void Update()
     {
-        if (dirVec != Vector3.zero)
+        if (dirVec != Vector2.zero)
         {
             if (speed < maxSpeed)
             {
@@ -48,55 +46,15 @@ public class PlayerMove : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            //manage.Action(scanObject);
-        }
-
-        // if (y == 1)
-        //     dirVec = Vector3.up;
-        // else if (y == -1)
-        //     dirVec = Vector3.down;
-        // else if (x == -1)
-        // {
-        //     dirVec = Vector3.left; 
-        // }
-        // else if (x == 1)
-        // {
-        //     dirVec = Vector3.right;
-        // }
-        
         if (rb.linearVelocity.x > 0)
             sr.flipX = true;
         else if (rb.linearVelocity.x < 0)
             sr.flipX = false;
-            
-
-        if (Input.GetKey(KeyCode.F))
-        {
-            Debug.Log("this is :" + scanObject.name);
-        }
     }
 
     void FixedUpdate()
     {
-        //Vector2 dir = new Vector2(x, y);
-        //rb.linearVelocity = dir * speed;
-        
         rb.linearVelocity = dirVec * speed;
-        
-        //Ray
-        Debug.DrawRay(rb.position, dirVec, Color.green);
-        RaycastHit2D rayHit =  Physics2D.Raycast(rb.position, dirVec, 1, LayerMask.GetMask("Object"));
-
-        if (rayHit.collider != null)
-        {
-            scanObject = rayHit.collider.gameObject;
-        }
-        else
-        {
-            scanObject = null;
-        }
     }
 
     void OnTriggerEnter2D(Collider2D collision)

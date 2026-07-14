@@ -4,14 +4,14 @@ public class MapManager : MonoBehaviour
 {
     public static MapManager Instance { get; private set; }
 
-    [Header("맵 데이터베이스")]
+    [Header("Map Database")]
     public MapDatabase mapDatabase;
 
-    [Header("시작 맵 설정")]
+    [Header("Start Map")]
     public MapDataEntry startMap;
     public string startSpawnLocationName;
 
-    [Header("카메라 배치")]
+    [Header("Camera Placement")]
     public Camera mainCamera;
     public float mapZOffset = 10f;
 
@@ -23,6 +23,13 @@ public class MapManager : MonoBehaviour
 
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Debug.LogError("Duplicate MapManager instance detected.", this);
+            Destroy(gameObject);
+            return;
+        }
+
         Instance = this;
         if (mainCamera == null)
             mainCamera = Camera.main;
@@ -34,56 +41,107 @@ public class MapManager : MonoBehaviour
             LoadMap(startMap, startSpawnLocationName);
     }
 
-    // 맵 이름(string)으로 로드 - MapTrigger 등에서 사용
     public void LoadMap(string mapName, string spawnLocationName = null)
     {
-        var entry = mapDatabase.GetMap(mapName);
-        if (entry == null)
+        if (mapDatabase == null)
         {
-            Debug.LogError($"맵을 찾을 수 없음: {mapName}");
+            Debug.LogError("MapManager has no MapDatabase assigned.", this);
             return;
         }
-        LoadMap(entry, spawnLocationName);
+
+        LoadMap(mapDatabase.GetMap(mapName), spawnLocationName);
     }
 
-    // MapDataEntry로 직접 로드 - 시작 맵 등 인스펙터에서 직접 참조할 때 사용
     public void LoadMap(MapDataEntry entry, string spawnLocationName = null)
     {
+        if (mapDatabase == null)
+        {
+            Debug.LogError("MapManager has no MapDatabase assigned.", this);
+            return;
+        }
+
+        if (entry == null)
+        {
+            Debug.LogError("MapManager received no MapDataEntry.", this);
+            return;
+        }
+
+        if (entry.prefab == null)
+        {
+            Debug.LogError($"Map '{entry.mapName}' has no prefab assigned.", entry);
+            return;
+        }
+
+        if (entry.prefab.GetComponent<MapLoader>() == null)
+        {
+            Debug.LogError($"Map prefab '{entry.prefab.name}' has no MapLoader component.", entry.prefab);
+            return;
+        }
+
+        var newMapInstance = Instantiate(entry.prefab, mapParent);
+        newMapInstance.transform.localPosition = Vector3.zero;
+        var newMapLoader = newMapInstance.GetComponent<MapLoader>();
+        newMapLoader.LoadMap(newMapInstance.transform);
+
+        var spawnPoint = newMapLoader.GetSpawnPoint(spawnLocationName);
+        if (spawnPoint == null)
+        {
+            Destroy(newMapInstance);
+            return;
+        }
+
+        if (player == null)
+        {
+            Debug.LogError("MapManager has no player assigned.", this);
+            Destroy(newMapInstance);
+            return;
+        }
+
+        PositionMapAtCamera(newMapInstance);
+
         if (currentMapInstance != null)
             Destroy(currentMapInstance);
 
-        PositionMapParentAtCamera();
+        player.transform.position = spawnPoint.position;
+        currentMapInstance = newMapInstance;
+        currentMapLoader = newMapLoader;
+    }
 
-        currentMapInstance = Instantiate(entry.prefab, mapParent);
-        currentMapInstance.transform.localPosition = Vector3.zero;
-        currentMapLoader = currentMapInstance.GetComponent<MapLoader>();
+    private void PositionMapAtCamera(GameObject mapInstance)
+    {
+        if (mainCamera == null || mapParent == null)
+            return;
 
-        if (currentMapLoader == null)
+        var cameraPosition = mainCamera.transform.position;
+        mapParent.position = new Vector3(cameraPosition.x, cameraPosition.y, cameraPosition.z + mapZOffset);
+
+        var renderers = mapInstance.GetComponentsInChildren<Renderer>();
+        var hasBounds = false;
+        var mapBounds = new Bounds();
+
+        foreach (var renderer in renderers)
         {
-            Debug.LogError("맵 프리팹에 MapLoader가 없음");
+            if (!renderer.enabled)
+                continue;
+
+            if (!hasBounds)
+            {
+                mapBounds = renderer.bounds;
+                hasBounds = true;
+            }
+            else
+            {
+                mapBounds.Encapsulate(renderer.bounds);
+            }
+        }
+
+        if (!hasBounds)
+        {
+            Debug.LogError($"Map '{mapInstance.name}' has no visible renderer to center.", mapInstance);
             return;
         }
 
-        currentMapLoader.LoadMap(currentMapInstance.transform);
-
-        var spawnPoint = currentMapLoader.GetSpawnPoint(spawnLocationName);
-        if (spawnPoint != null && player != null)
-        {
-            player.transform.position = spawnPoint.position;
-        }
-        else
-        {
-            Debug.LogWarning("스폰 위치를 찾지 못함");
-        }
+        var offset = cameraPosition - mapBounds.center;
+        mapInstance.transform.position += new Vector3(offset.x, offset.y, 0f);
     }
-
-private void PositionMapParentAtCamera()
-{
-    if (mainCamera == null || mapParent == null) return;
-
-    Vector3 camPos = mainCamera.transform.position;
-    mapParent.position = new Vector3(camPos.x, camPos.y, camPos.z + mapZOffset);
-
-    Debug.Log($"[MapManager] 카메라 위치: {camPos}, 맵 배치 위치: {mapParent.position}");
-}
 }

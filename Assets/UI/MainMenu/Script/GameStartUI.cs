@@ -1,9 +1,6 @@
-using System;
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameStartUI : MonoBehaviour
 {
@@ -20,7 +17,7 @@ public class GameStartUI : MonoBehaviour
 
     private void GameStart()
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene("MapLoading");
     }
     
     private void GameQuit()

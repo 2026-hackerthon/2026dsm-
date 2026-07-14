@@ -1,48 +1,53 @@
-using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class TImerUI : MonoBehaviour
 {
-    private TextMeshProUGUI textMeshPro;
-    [SerializeField] private float Maxtime;
-    private float timer = 0;
-    [SerializeField] private GameOverUI gameOverUI;
-    private bool isGameOver = false;
+    [SerializeField] private Color warningColor = new Color(0.9f, 0.2f, 0.2f);
+
+    private TMP_Text timerText;
+    private Color normalColor;
+    private GameSession gameSession;
 
     private void Awake()
     {
-        isGameOver = false;
-        textMeshPro = GetComponent<TextMeshProUGUI>();
-        timer = Maxtime;
-        TimerApply();
-    }
+        timerText = GetComponent<TMP_Text>();
 
-    public void Init()
-    {
-        isGameOver = false;
-        timer = Maxtime;
-        TimerApply();
-    }
-
-    private void Update()
-    {
-        timer -= Time.deltaTime;
-        TimerApply();
-        if (timer < 0 && !isGameOver)
+        if (timerText == null)
         {
-            isGameOver = true;
-            gameOverUI.OnDeadUI("시간안에 탈출하지 못했습니다...");
+            Debug.LogError("TImerUI requires a TMP text component.", this);
+            enabled = false;
+            return;
         }
+
+        normalColor = timerText.color;
     }
-    
-    private void TimerApply()
+
+    private void Start()
     {
-        int min = (int)(timer / 60);
-        float sec = timer % 60;
-        if (min == 0 && sec <= 10)
-            textMeshPro.color = new Color(0.8f, 0, 0);
-        textMeshPro.text = $"{min:00}:{sec:00.00}";
+        gameSession = GameSession.Instance;
+
+        if (gameSession == null)
+        {
+            Debug.LogError("TImerUI could not find GameSession.", this);
+            enabled = false;
+            return;
+        }
+
+        gameSession.RemainingTimeChanged += UpdateTime;
+        UpdateTime(gameSession.RemainingTime);
+    }
+
+    private void UpdateTime(float remainingTime)
+    {
+        int totalSeconds = Mathf.CeilToInt(Mathf.Max(0f, remainingTime));
+        timerText.text = $"{totalSeconds / 60:00}:{totalSeconds % 60:00}";
+        timerText.color = remainingTime <= 10f ? warningColor : normalColor;
+    }
+
+    private void OnDestroy()
+    {
+        if (gameSession != null)
+            gameSession.RemainingTimeChanged -= UpdateTime;
     }
 }

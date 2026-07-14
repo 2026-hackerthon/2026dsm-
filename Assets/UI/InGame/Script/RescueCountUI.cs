@@ -1,28 +1,45 @@
-using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class RescueCountUI : MonoBehaviour
 {
-    private TextMeshProUGUI rescueCountText;
-    private int rescueCount = 0;
+    private TMP_Text rescueCountText;
+    private GameSession gameSession;
+
+    private void Awake()
+    {
+        rescueCountText = GetComponent<TMP_Text>();
+
+        if (rescueCountText == null)
+        {
+            Debug.LogError("RescueCountUI requires a TMP text component.", this);
+            enabled = false;
+        }
+    }
 
     private void Start()
     {
-        rescueCountText = GetComponentInChildren<TextMeshProUGUI>();
-        rescueCountText.text = rescueCount.ToString();
+        gameSession = GameSession.Instance;
+
+        if (gameSession == null)
+        {
+            Debug.LogError("RescueCountUI could not find GameSession.", this);
+            enabled = false;
+            return;
+        }
+
+        gameSession.RescueCountChanged += UpdateCount;
+        UpdateCount(gameSession.RescuedStudentCount);
     }
 
-    public void Init()
+    private void UpdateCount(int count)
     {
-        rescueCount = 0;
-        rescueCountText.text = rescueCount.ToString();
+        rescueCountText.text = $"{count}/{GameSession.MaxRescuedStudents}";
     }
 
-    private void RescueStudent()
+    private void OnDestroy()
     {
-        rescueCount++;
-        rescueCountText.text = rescueCount.ToString();
+        if (gameSession != null)
+            gameSession.RescueCountChanged -= UpdateCount;
     }
 }

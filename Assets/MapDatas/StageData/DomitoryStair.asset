@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06c2bea76dd1163408b504174b63bba4, type: 3}
+  m_Name: DomitoryStair
+  m_EditorClassIdentifier: Assembly-CSharp::MapDataEntry
+  mapName: DomitoryStair
+  prefab: {fileID: 8956815556365761544, guid: c266050c4c1ddfd449389f20c92811f3, type: 3}

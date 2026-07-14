@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 381398433995463696}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -10.2254, y: -0, z: 0}
+  m_LocalPosition: {x: -10.2254, y: 0, z: 0}
   m_LocalScale: {x: 19.93303, y: 2.4615958, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -571,6 +571,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MapTrigger
   targetMapName: TestMap03
   targetPlayerLocationName: 03
+  isLocked: 0
 --- !u!1 &6513046729369030014
 GameObject:
   m_ObjectHideFlags: 0
