@@ -5,6 +5,7 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] Deadable deadable;
     
     [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private SpriteRenderer sr;
     
     [SerializeField] private float speed;
     [SerializeField] private float normalSpeed;
@@ -24,6 +25,7 @@ public class PlayerMove : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        sr = GetComponent<SpriteRenderer>();
         deadable = GetComponent<Deadable>();
         
         speed = normalSpeed;
@@ -51,14 +53,24 @@ public class PlayerMove : MonoBehaviour
             //manage.Action(scanObject);
         }
 
-        if (y == 1)
-            dirVec = Vector3.up;
-        else if (y == -1)
-            dirVec = Vector3.down;
-        else if (x == -1)
-            dirVec = Vector3.left;
-        else if (x == 1)
-            dirVec = Vector3.right;
+        // if (y == 1)
+        //     dirVec = Vector3.up;
+        // else if (y == -1)
+        //     dirVec = Vector3.down;
+        // else if (x == -1)
+        // {
+        //     dirVec = Vector3.left; 
+        // }
+        // else if (x == 1)
+        // {
+        //     dirVec = Vector3.right;
+        // }
+        
+        if (rb.linearVelocity.x > 0)
+            sr.flipX = true;
+        else if (rb.linearVelocity.x < 0)
+            sr.flipX = false;
+            
 
         if (Input.GetKey(KeyCode.F))
         {
