@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
+    [SerializeField] Deadable deadable;
+    
     [SerializeField] private Rigidbody2D rb;
     
     [SerializeField] private float speed;
@@ -22,6 +24,7 @@ public class PlayerMove : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        deadable = GetComponent<Deadable>();
         
         speed = normalSpeed;
     }
@@ -81,6 +84,15 @@ public class PlayerMove : MonoBehaviour
         else
         {
             scanObject = null;
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Obstacle"))
+        {
+            Debug.Log("Dead");
+            deadable.Dead();
         }
     }
 }
