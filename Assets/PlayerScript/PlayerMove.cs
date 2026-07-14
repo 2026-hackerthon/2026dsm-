@@ -8,6 +8,10 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float normalSpeed;
     [SerializeField] private float maxSpeed;
 
+    private Vector3 dirVec;
+
+    private GameObject scanObject;
+
     // public TextManage manage;
  
     private float x;
@@ -39,11 +43,38 @@ public class PlayerMove : MonoBehaviour
         {
             //manage.Action(scanObject);
         }
+
+        if (y == 1)
+            dirVec = Vector3.up;
+        else if (y == -1)
+            dirVec = Vector3.down;
+        else if (x == -1)
+            dirVec = Vector3.left;
+        else if (x == 1)
+            dirVec = Vector3.right;
+
+        if (Input.GetKey(KeyCode.F))
+        {
+            Debug.Log("this is :" + scanObject.name);
+        }
     }
 
     void FixedUpdate()
     {
         Vector2 dir = new Vector2(x, y);
         rb.linearVelocity = dir * speed;
+        
+        //Ray
+        Debug.DrawRay(rb.position, dirVec, Color.green);
+        RaycastHit2D rayHit =  Physics2D.Raycast(rb.position, dirVec, 1, LayerMask.GetMask("Object"));
+
+        if (rayHit.collider != null)
+        {
+            scanObject = rayHit.collider.gameObject;
+        }
+        else
+        {
+            scanObject = null;
+        }
     }
 }

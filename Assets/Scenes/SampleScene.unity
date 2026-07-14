@@ -372,7 +372,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bee50ffd03c4c14983f96d7803f9bb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMove
-  speed: 0
+  rb: {fileID: 0}
+  speed: 3
+  normalSpeed: 3
+  maxSpeed: 10
 --- !u!50 &1532015230
 Rigidbody2D:
   serializedVersion: 5
