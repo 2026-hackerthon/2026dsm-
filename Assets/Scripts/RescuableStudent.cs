@@ -54,14 +54,21 @@ public sealed class RescuableStudent : MonoBehaviour, IInteractable
 
     private void BeginDialogue(GameObject interactor)
     {
-        PlayerMove move = interactor.GetComponent<PlayerMove>();
-        if (move == null || DialoguePanel.Instance == null)
+        PlayerMove move = interactor.GetComponentInParent<PlayerMove>();
+        if (move == null)
         {
-            Debug.LogError("Student interaction requires PlayerMove and DialoguePanel.", this);
+            Debug.LogError("Student interaction requires a PlayerMove component on the interacting player.", this);
             return;
         }
 
-        if (!DialoguePanel.Instance.TryOpen(studentName, dialogueLines))
+        TextManage textManage = TextManage.GetOrFind();
+        if (textManage == null)
+        {
+            Debug.LogError("Student interaction requires TextManage in the active scene.", this);
+            return;
+        }
+
+        if (!textManage.TryOpen(studentName, dialogueLines))
             return;
 
         player = interactor.transform;
@@ -72,7 +79,14 @@ public sealed class RescuableStudent : MonoBehaviour, IInteractable
 
     private void AdvanceDialogue()
     {
-        if (!DialoguePanel.Instance.Advance())
+        TextManage textManage = TextManage.GetOrFind();
+        if (textManage == null)
+        {
+            Debug.LogError("TextManage was removed while student dialogue was active.", this);
+            return;
+        }
+
+        if (!textManage.Advance())
             return;
 
         playerMove.SetMovementEnabled(true);

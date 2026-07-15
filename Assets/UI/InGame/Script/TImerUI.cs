@@ -9,9 +9,7 @@ public class TImerUI : MonoBehaviour
     private Color normalColor;
     private GameSession gameSession;
     
-    private GameSessionState gameSessionState;
-    
-    [SerializeReference] private GameOverUI gameOverUI;
+    [SerializeField] private GameOverUI gameOverUI;
 
     private void Awake()
     {
@@ -55,13 +53,23 @@ public class TImerUI : MonoBehaviour
     private void OnGameOver(GameSessionState gameSessionState)
     {
         if (gameSessionState == GameSessionState.GameOver)
-            gameOverUI.OnDeadUI("Time is Over");
-            
+        {
+            if (gameOverUI == null)
+            {
+                Debug.LogError("TImerUI requires a GameOverUI reference.", this);
+                return;
+            }
+
+            gameOverUI.OnDeadUI(gameSession.GameOverReason);
+        }
     }
 
     private void OnDestroy()
     {
         if (gameSession != null)
+        {
             gameSession.RemainingTimeChanged -= UpdateTime;
+            gameSession.StateChanged -= OnGameOver;
+        }
     }
 }

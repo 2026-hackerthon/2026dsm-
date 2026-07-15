@@ -1,27 +1,27 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class TalkManage : MonoBehaviour
 {
-    private Dictionary<int, string[]> talkData;
+    private string speaker;
+    private string[] lines;
+    private int index;
 
-    private void Awake()
+    public bool Begin(string speakerName, string[] dialogueLines)
     {
-        talkData = new Dictionary<int, string[]>();
-        GenerateData();
+        if (dialogueLines == null || dialogueLines.Length == 0)
+            return false;
+
+        speaker = speakerName;
+        lines = dialogueLines;
+        index = 0;
+        return true;
     }
 
-    private void GenerateData()
-    {
-        talkData.Add(1, new[] { "불이 났어. 지금 나가야 해!" });
-        talkData.Add(2, new[] { "조금만 더 자면 안 돼?", "정말 위험하다고? 알겠어, 같이 가자." });
-    }
+    public string CurrentLine => $"<b>{speaker}</b>\n{lines[index]}";
 
-    public string GetTalk(int id, int talkIndex)
+    public bool MoveNext()
     {
-        if (!talkData.TryGetValue(id, out string[] talks) || talkIndex >= talks.Length)
-            return null;
-
-        return talks[talkIndex];
+        index++;
+        return index >= lines.Length;
     }
 }

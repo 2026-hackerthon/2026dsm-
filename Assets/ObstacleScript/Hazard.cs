@@ -3,7 +3,12 @@ using UnityEngine;
 [RequireComponent(typeof(Collider2D))]
 public class Hazard : MonoBehaviour
 {
-    [SerializeField] private string deathReason = "위험 요소에 닿았습니다.";
+    [SerializeField] private string deathReason = "Fire hazard.";
+
+    private void Awake()
+    {
+        GetComponent<Collider2D>().isTrigger = true;
+    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {

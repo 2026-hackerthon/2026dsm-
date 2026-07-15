@@ -10,39 +10,28 @@ public class GameOverUI : MonoBehaviour
     [SerializeField] private Button backTitleButton;
     [SerializeField] private TextMeshProUGUI deadReasonText;
 
-    private GameSession gameSession;
-
     private void Awake()
     {
-        restartButton.onClick.AddListener(Restart);
-        backTitleButton.onClick.AddListener(BackTitle);
-    }
+        if (panel == null)
+            panel = gameObject;
 
-    private void Start()
-    {
-        gameSession = GameSession.Instance;
+        if (restartButton != null)
+            restartButton.onClick.AddListener(Restart);
 
-        if (gameSession == null)
-        {
-            Debug.LogError("GameOverUI could not find GameSession.", this);
-            return;
-        }
-
-        gameSession.StateChanged += OnStateChanged;
-        panel.SetActive(false);
+        if (backTitleButton != null)
+            backTitleButton.onClick.AddListener(BackTitle);
     }
 
     public void OnDeadUI(string reason)
     {
         Time.timeScale = 0f;
-        deadReasonText.text = reason;
-        panel.SetActive(true);
-    }
+        if (panel == null)
+            panel = gameObject;
 
-    private void OnStateChanged(GameSessionState state)
-    {
-        if (state == GameSessionState.GameOver)
-            OnDeadUI(gameSession.GameOverReason);
+        if (deadReasonText != null)
+            deadReasonText.text = reason;
+
+        panel.SetActive(true);
     }
 
     private void Restart()
@@ -57,9 +46,4 @@ public class GameOverUI : MonoBehaviour
         SceneManager.LoadScene("TitleScene");
     }
 
-    private void OnDestroy()
-    {
-        if (gameSession != null)
-            gameSession.StateChanged -= OnStateChanged;
-    }
 }
