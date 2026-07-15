@@ -2,48 +2,55 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-    [SerializeField] Deadable deadable;
-    
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private SpriteRenderer sr;
-    
+
     [SerializeField] private float speed;
     [SerializeField] private float normalSpeed;
     [SerializeField] private float maxSpeed;
-    [SerializeField] private float acceleration = 5f; // 가속도
-    [SerializeField] private float deceleration = 10f; // 감속도   
-    
-    private Vector2 dirVec;
+    [SerializeField] private float acceleration = 5f;
+    [SerializeField] private float deceleration = 10f;
 
-    void Awake()
+    private Vector2 dirVec;
+    private bool canMove = true;
+
+    private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
-        deadable = GetComponent<Deadable>();
-        
         speed = normalSpeed;
     }
 
     public void SetMoveInput(Vector2 input)
     {
-        dirVec = input.normalized;
+        dirVec = canMove ? input.normalized : Vector2.zero;
     }
 
-    void Update()
+    public void SetMovementEnabled(bool isEnabled)
     {
+        canMove = isEnabled;
+
+        if (canMove)
+            return;
+
+        dirVec = Vector2.zero;
+        speed = normalSpeed;
+        rb.linearVelocity = Vector2.zero;
+    }
+
+    private void Update()
+    {
+        if (!canMove)
+            return;
+
         if (dirVec != Vector2.zero)
         {
             if (speed < maxSpeed)
-            {
                 speed += acceleration * Time.deltaTime;
-            }
         }
-        else
+        else if (speed > normalSpeed)
         {
-            if (speed > normalSpeed)
-            {
-                speed -= deceleration * Time.deltaTime;
-            }
+            speed -= deceleration * Time.deltaTime;
         }
 
         if (rb.linearVelocity.x > 0)
@@ -52,17 +59,8 @@ public class PlayerMove : MonoBehaviour
             sr.flipX = false;
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        rb.linearVelocity = dirVec * speed;
-    }
-
-    void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Obstacle"))
-        {
-            Debug.Log("Dead");
-            deadable.Dead();
-        }
+        rb.linearVelocity = canMove ? dirVec * speed : Vector2.zero;
     }
 }

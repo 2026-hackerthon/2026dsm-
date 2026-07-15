@@ -188,6 +188,7 @@ GameObject:
   - component: {fileID: 484402424}
   - component: {fileID: 484402426}
   - component: {fileID: 484402427}
+  - component: {fileID: 484402428}
   m_Layer: 0
   m_Name: Fire
   m_TagString: Obstacle
@@ -327,6 +328,19 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &484402428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 484402422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79369262c00a4654f86d1108d2ba3643, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hazard
+  deathReason: "\uD654\uC7AC\uC5D0 \uD729\uC2F8\uC600\uC2B5\uB2C8\uB2E4."
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -477,6 +491,7 @@ GameObject:
   - component: {fileID: 529625623}
   - component: {fileID: 529625622}
   - component: {fileID: 529625626}
+  - component: {fileID: 529625627}
   m_Layer: 0
   m_Name: Explosion
   m_TagString: Obstacle
@@ -628,6 +643,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 684bd784ee7bd664d935da9ef274c240, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Explosion
+--- !u!114 &529625627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 529625621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79369262c00a4654f86d1108d2ba3643, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Hazard
+  deathReason: "\uD3ED\uBC1C\uC5D0 \uD718\uB9D0\uB838\uC2B5\uB2C8\uB2E4."
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,27 +3,23 @@ using UnityEngine;
 
 public class TalkManage : MonoBehaviour
 {
-    Dictionary<int, string[]> TalkData;
+    private Dictionary<int, string[]> talkData;
 
-    void Awake()
+    private void Awake()
     {
-        TalkData = new Dictionary<int, string[]>();
+        talkData = new Dictionary<int, string[]>();
         GenerateData();
     }
 
-    void GenerateData()
+    private void GenerateData()
     {
-        TalkData.Add(1, new string[] { "아아 마이크 테스트" });
-        TalkData.Add(2, new string[] { "언나더 원데이 투 마 라잎", "이거 진짜에요?" });
+        talkData.Add(1, new[] { "불이 났어. 지금 나가야 해!" });
+        talkData.Add(2, new[] { "조금만 더 자면 안 돼?", "정말 위험하다고? 알겠어, 같이 가자." });
     }
 
     public string GetTalk(int id, int talkIndex)
     {
-        if (!TalkData.ContainsKey(id))
-            return null;
-
-        string[] talks = TalkData[id];
-        if (talkIndex >= talks.Length)
+        if (!talkData.TryGetValue(id, out string[] talks) || talkIndex >= talks.Length)
             return null;
 
         return talks[talkIndex];

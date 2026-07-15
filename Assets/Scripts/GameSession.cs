@@ -20,6 +20,7 @@ public sealed class GameSession : MonoBehaviour
     public int RescuedStudentCount { get; private set; }
     public bool HasCardKey { get; private set; }
     public GameSessionState State { get; private set; }
+    public string GameOverReason { get; private set; }
 
     public event Action<float> RemainingTimeChanged;
     public event Action<int> RescueCountChanged;
@@ -40,6 +41,7 @@ public sealed class GameSession : MonoBehaviour
         RescuedStudentCount = 0;
         HasCardKey = false;
         State = GameSessionState.Playing;
+        GameOverReason = string.Empty;
     }
 
     private void Start()
@@ -59,7 +61,7 @@ public sealed class GameSession : MonoBehaviour
         RemainingTimeChanged?.Invoke(RemainingTime);
 
         if (RemainingTime == 0f)
-            GameOver();
+            GameOver("건물이 붕괴했습니다.");
     }
 
     public bool TryRescueStudent()
@@ -84,6 +86,15 @@ public sealed class GameSession : MonoBehaviour
 
     public void GameOver()
     {
+        GameOver("건물이 붕괴했습니다.");
+    }
+
+    public void GameOver(string reason)
+    {
+        if (State != GameSessionState.Playing)
+            return;
+
+        GameOverReason = string.IsNullOrWhiteSpace(reason) ? "위험 요소에 닿았습니다." : reason;
         SetState(GameSessionState.GameOver);
     }
 
