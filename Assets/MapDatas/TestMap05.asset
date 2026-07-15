@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 0}
-  m_Name: TestMap04
+  m_Name: TestMap05
   m_EditorClassIdentifier: Assembly-CSharp::MapDataEntry
-  mapName: TestMap04
-  prefab: {fileID: 8750750305779487109, guid: 9b0aa99536c04854eaa0ae1232734b0a, type: 3}
+  mapName: TestMap05
+  prefab: {fileID: 847833725979578677, guid: 1f599cfa46c148a40bfa2ebdbe4e1a75, type: 3}

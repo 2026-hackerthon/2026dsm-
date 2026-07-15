@@ -303,7 +303,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e13e4b1113707141b6c73d501bd3d90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MapTrigger
-  targetMapName: TestMap03
+  targetMapName: TestMap05
   targetPlayerLocationName: 01
   isLocked: 1
 --- !u!1 &737100262818502213
