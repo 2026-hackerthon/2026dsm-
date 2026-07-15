@@ -3,11 +3,15 @@ using UnityEngine;
 
 public class TImerUI : MonoBehaviour
 {
-    [SerializeField] private Color warningColor = new Color(0.9f, 0.2f, 0.2f);
+    [SerializeField] private Color warningColor = new Color(0.8f, 0, 0);
 
     private TMP_Text timerText;
     private Color normalColor;
     private GameSession gameSession;
+    
+    private GameSessionState gameSessionState;
+    
+    [SerializeReference] private GameOverUI gameOverUI;
 
     private void Awake()
     {
@@ -35,14 +39,24 @@ public class TImerUI : MonoBehaviour
         }
 
         gameSession.RemainingTimeChanged += UpdateTime;
+        gameSession.StateChanged += OnGameOver;
         UpdateTime(gameSession.RemainingTime);
+        OnGameOver(gameSession.State);
     }
 
     private void UpdateTime(float remainingTime)
     {
-        int totalSeconds = Mathf.CeilToInt(Mathf.Max(0f, remainingTime));
-        timerText.text = $"{totalSeconds / 60:00}:{totalSeconds % 60:00}";
+        float totalSeconds = Mathf.Max(0f, remainingTime);
+        timerText.text = $"{totalSeconds / 60:00}:{totalSeconds % 60:00.00}";
         timerText.color = remainingTime <= 10f ? warningColor : normalColor;
+        
+    }
+
+    private void OnGameOver(GameSessionState gameSessionState)
+    {
+        if (gameSessionState == GameSessionState.GameOver)
+            gameOverUI.OnDeadUI("Time is Over");
+            
     }
 
     private void OnDestroy()
